@@ -5,7 +5,8 @@ selectFolderButton.addEventListener('click', async () => {
     try {
         const fsHandle = await window.showDirectoryPicker(); //return an object representing the selected folder (FileSystemDirectoryHandle)
 
-        await scanDirectory(fsHandle);
+        const scanResult = await scanDirectory(fsHandle);
+        console.log('Scan Result', scanResult);
     } catch (error) {
         if (error.name === 'AbortError') {
             console.log('Folder selection was canceled by the user.');
