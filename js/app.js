@@ -1,4 +1,5 @@
 import { scanDirectory } from './scanner.js';
+import { analyzeScan } from './analyzer.js';
 const selectFolderButton = document.getElementById('select-folder-btn');
 
 selectFolderButton.addEventListener('click', async () => {
@@ -6,7 +7,9 @@ selectFolderButton.addEventListener('click', async () => {
         const fsHandle = await window.showDirectoryPicker(); //return an object representing the selected folder (FileSystemDirectoryHandle)
 
         const scanResult = await scanDirectory(fsHandle);
+        const analysis = await analyzeScan(scanResult);
         console.log('Scan Result', scanResult);
+        console.log('Analysis Result', analysis);
     } catch (error) {
         if (error.name === 'AbortError') {
             console.log('Folder selection was canceled by the user.');
