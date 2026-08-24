@@ -1,5 +1,6 @@
 import { scanDirectory } from './scanner.js';
 import { analyzeScan } from './analyzer.js';
+import { findDuplicates } from './duplicate.js';
 const selectFolderButton = document.getElementById('select-folder-btn');
 
 selectFolderButton.addEventListener('click', async () => {
@@ -12,6 +13,8 @@ selectFolderButton.addEventListener('click', async () => {
         console.log('Analysis Result', analysis.byExtension);
         console.log('File Types', analysis.byType);
         console.log('Largest Files', analysis.largestFiles);
+        const duplicates = await findDuplicates(scanResult);
+        console.log('Duplicates', duplicates);
     } catch (error) {
         if (error.name === 'AbortError') {
             console.log('Folder selection was canceled by the user.');

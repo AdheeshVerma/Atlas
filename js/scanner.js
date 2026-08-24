@@ -22,7 +22,8 @@ async function listDirectoryContents(fsHandle, path = "", scanResult) {
 
                 type: file.type,
 
-                lastModified: file.lastModified //not converting to date cause would need to compare later on
+                lastModified: file.lastModified, //not converting to date cause would need to compare later on
+                fileHandle: handle // Store the FileSystemFileHandle for later use
             };
             scanResult.files.push(fileInfo);
             scanResult.totalFiles++;
