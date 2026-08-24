@@ -22,7 +22,7 @@ async function buildHashMap(duplicateCandidates){
     }
     return hashMap;
 }
-async function findDuplicateCandidates(scanResult){
+function findDuplicateCandidates(scanResult){
     const sizeMap = new Map();
     for (const file of scanResult.files) {
         if (sizeMap.has(file.size)) {
@@ -39,7 +39,7 @@ async function findDuplicateCandidates(scanResult){
     }
     return duplicateCandidates;
 }
-async function duplicateGroups(duplicateHashes){
+function duplicateGroups(duplicateHashes){
     const groups = [];
     for (const files of duplicateHashes.values()) {
         if (files.length > 1) {
@@ -48,10 +48,22 @@ async function duplicateGroups(duplicateHashes){
     }
     return groups;
 }
+function calculateDuplicateSaving(duplicates){
+    let totalSize = 0;
+    for (const group of duplicates) {
+        const groupSize = group[0].size * (group.length - 1);
+        totalSize += groupSize;
+    }
+    return totalSize;
+}
 export async function findDuplicates(scanResult){
     const duplicateCandidates = findDuplicateCandidates(scanResult);
+    console.log(`Duplicate Candidates are`,duplicateCandidates);
     const duplicateHashes = await buildHashMap(duplicateCandidates); // Build the hash map for the duplicate candidates
     console.log("Hashes for Duplicate Files are",duplicateHashes);
     const duplicates = duplicateGroups(duplicateHashes);
+    const potentialSaving = calculateDuplicateSaving(duplicates);
+    duplicates.potentialSaving = potentialSaving;
+    console.log(`Potential saving from duplicates: ${potentialSaving} bytes`);
     return duplicates;
 }
