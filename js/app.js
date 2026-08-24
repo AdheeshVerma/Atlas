@@ -7,14 +7,23 @@ selectFolderButton.addEventListener('click', async () => {
     try {
         const fsHandle = await window.showDirectoryPicker(); //return an object representing the selected folder (FileSystemDirectoryHandle)
 
-        const scanResult = await scanDirectory(fsHandle);
-        const analysis = await analyzeScan(scanResult);
-        console.log('Scan Result', scanResult);
-        console.log('Analysis Result', analysis.byExtension);
-        console.log('File Types', analysis.byType);
-        console.log('Largest Files', analysis.largestFiles);
-        const duplicates = await findDuplicates(scanResult);
-        console.log('Duplicates', duplicates);
+        const worker = new Worker("./workers/worker.js", { type: "module" });
+        worker.postMessage({ type: "SCAN_FOLDER", handle: fsHandle });
+
+        worker.addEventListener("error", (event) => {
+            console.error("WORKER ERROR:", event.message);
+        });
+
+        worker.addEventListener('message', (event) => {
+            console.log('Message from worker:', event.data.type);
+            console.log('Scan Results:', event.data.scanResult);
+            console.log('Analysis Results:', event.data.analysis);
+            console.log('Duplicates:', event.data.duplicates);
+        });
+        worker.addEventListener("error", (event) => {
+            console.error("WORKER ERROR:", event.message);
+        });
+
     } catch (error) {
         if (error.name === 'AbortError') {
             console.log('Folder selection was canceled by the user.');
@@ -24,3 +33,4 @@ selectFolderButton.addEventListener('click', async () => {
         }
     }
 });
+
