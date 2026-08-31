@@ -5,7 +5,21 @@ self.onmessage = async function (event) {
     const data = event.data;
     if (data.type === "SCAN_FOLDER") {
         const fsHandle = data.handle;
-        const scanResult = await scanDirectory(fsHandle);
+        const { scanResult, cancelled } = await scanDirectory(fsHandle, (progress) => {
+
+
+            self.postMessage({ type: "SCAN_PROGRESS", progress })
+
+        }, (cancel) => {
+
+            if (cancel) {
+
+                self.postMessage({ type: "SCAN_CANCELLED" });
+
+            }
+
+        });
+        if (cancelled) return;
         const analysis = analyzeScan(scanResult);
         console.log('Scan Result', scanResult);
         console.log('Analysis Result', analysis.byExtension);
