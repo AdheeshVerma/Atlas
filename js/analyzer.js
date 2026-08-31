@@ -50,12 +50,29 @@ function getLargestFiles(scanResult) {
     const sortedFiles = [...scanResult.files].sort((a, b) => b.size - a.size);
     return sortedFiles.slice(0, 10);
 }
+function analyzeDirectories(scanResult) {
+    const directoryAnalysis = scanResult.directories.map(dir => {
+        const filesInDir = scanResult.files.filter(file =>
+            file.path.startsWith(`${dir}/`)
+        );
+
+        return {
+            directory: dir,
+            fileCount: filesInDir.length,
+            totalSize: filesInDir.reduce(
+                (total, file) => total + file.size,
+                0
+            )
+        };
+    }).sort((a, b) => b.totalSize - a.totalSize); // sort folders in decending order by size
+    return directoryAnalysis;
+}
 export const analyzeScan = (scanResult) => {
     const analysisResult = {
         byExtension: buildExtensionAnalysis(scanResult),
         byType: buildTypeAnalysis(scanResult),
         largestFiles: getLargestFiles(scanResult),
-
+        directories: analyzeDirectories(scanResult)
     };
     return analysisResult;
 }

@@ -22,10 +22,10 @@ selectFolderButton.addEventListener('click', async () => {
             }
 
             else if (data.type === "SCAN_COMPLETE") {
-
-                console.log("Scan Results:", data.scanResult);
-                console.log("Analysis Results:", data.analysis);
-                console.log("Duplicates:", data.duplicates);
+                console.log("Scan complete!");
+                // console.log("Scan Results:", data.scanResult);
+                // console.log("Analysis Results:", data.analysis);
+                // console.log("Duplicates:", data.duplicates);
 
             }
 
