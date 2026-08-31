@@ -67,12 +67,22 @@ function analyzeDirectories(scanResult) {
     }).sort((a, b) => b.totalSize - a.totalSize); // sort folders in decending order by size
     return directoryAnalysis;
 }
+function getOldestFiles(scanResult) {
+    const sortedFiles = [...scanResult.files].sort((a, b) => a.lastModified - b.lastModified);
+    return sortedFiles.slice(0, 10);
+}
+function getNewestFiles(scanResult) {
+    const sortedFiles = [...scanResult.files].sort((a, b) => b.lastModified - a.lastModified);
+    return sortedFiles.slice(0, 10);
+}
 export const analyzeScan = (scanResult) => {
     const analysisResult = {
         byExtension: buildExtensionAnalysis(scanResult),
         byType: buildTypeAnalysis(scanResult),
         largestFiles: getLargestFiles(scanResult),
-        directories: analyzeDirectories(scanResult)
+        directories: analyzeDirectories(scanResult),
+        oldestFiles: getOldestFiles(scanResult),
+        newestFiles: getNewestFiles(scanResult)
     };
     return analysisResult;
 }

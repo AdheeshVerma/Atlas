@@ -26,6 +26,8 @@ self.onmessage = async function (event) {
         console.log('File Types', analysis.byType);
         console.log('Largest Files', analysis.largestFiles);
         console.log('Large Folders', analysis.directories);
+        console.log('Oldest Files', analysis.oldestFiles);
+        console.log('Newest Files', analysis.newestFiles);
         const duplicates = await findDuplicates(scanResult);
         console.log('Duplicates', duplicates);
 
