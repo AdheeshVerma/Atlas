@@ -10,25 +10,20 @@ selectFolderButton.addEventListener('click', async () => {
         const worker = new Worker("./workers/worker.js", { type: "module" });
         worker.postMessage({ type: "SCAN_FOLDER", handle: fsHandle });
 
-
         worker.addEventListener('message', (event) => {
-
             const data = event.data;
-
             if (data.type === "SCAN_PROGRESS") {
-
                 console.log("Scan progress:", data.progress);
-
             }
-
+            else if (data.type === "ANALYSIS_STARTED") {
+                console.log("Analysis started!");
+            }
+            else if (data.type === "DUPLICATION DETECTION STARTED") {
+                console.log("Duplication detection started!");
+            }
             else if (data.type === "SCAN_COMPLETE") {
                 console.log("Scan complete!");
-                // console.log("Scan Results:", data.scanResult);
-                // console.log("Analysis Results:", data.analysis);
-                // console.log("Duplicates:", data.duplicates);
-
             }
-
         });
         worker.addEventListener("error", (event) => {
             console.error("WORKER ERROR:", event.message);

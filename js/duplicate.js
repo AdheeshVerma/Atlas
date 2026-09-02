@@ -1,12 +1,12 @@
-async function hashFile(file){
+async function hashFile(file) {
     const fileBuffer = await file.arrayBuffer();
     const hashBuffer = await crypto.subtle.digest('SHA-256', fileBuffer);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    console.log(`Hash of file ${file.name} is ${hashHex}`); ;
+    // console.log(`Hash of file ${file.name} is ${hashHex}`);;
     return hashHex;
 }
-async function buildHashMap(duplicateCandidates){
+async function buildHashMap(duplicateCandidates) {
     const hashMap = new Map();
     for (const group of duplicateCandidates) {
         for (const file of group) {
@@ -22,7 +22,7 @@ async function buildHashMap(duplicateCandidates){
     }
     return hashMap;
 }
-function findDuplicateCandidates(scanResult){
+function findDuplicateCandidates(scanResult) {
     const sizeMap = new Map();
     for (const file of scanResult.files) {
         if (sizeMap.has(file.size)) {
@@ -39,7 +39,7 @@ function findDuplicateCandidates(scanResult){
     }
     return duplicateCandidates;
 }
-function duplicateGroups(duplicateHashes){
+function duplicateGroups(duplicateHashes) {
     const groups = [];
     for (const files of duplicateHashes.values()) {
         if (files.length > 1) {
@@ -48,22 +48,39 @@ function duplicateGroups(duplicateHashes){
     }
     return groups;
 }
-function calculateDuplicateSaving(duplicates){
-    let totalSize = 0;
-    for (const group of duplicates) {
-        const groupSize = group[0].size * (group.length - 1);
-        totalSize += groupSize;
+function analyzeDuplicateGroups(duplicateGroups) {
+    const groupAnalysis = [];
+    for (const group of duplicateGroups) {
+        const files = [];
+        for (const file of group) {
+            files.push(file.name);
+        }
+        const fileCount = files.length;
+        const sizePerFile = group[0].size;
+        const potentialSaving = sizePerFile * (fileCount - 1);
+        groupAnalysis.push({
+            files: files,
+            fileCount: fileCount,
+            sizePerFile: sizePerFile,
+            potentialSaving
+        });
     }
-    return totalSize;
+    return groupAnalysis;
 }
-export async function findDuplicates(scanResult){
+function calculateTotalPotentialSaving(groupAnalysis) {
+    let totalPotentialSaving = 0;
+    for (const group of groupAnalysis) {
+        totalPotentialSaving += group.potentialSaving;
+    }
+    return totalPotentialSaving;
+}
+export async function findDuplicates(scanResult) {
     const duplicateCandidates = findDuplicateCandidates(scanResult);
-    console.log(`Duplicate Candidates are`,duplicateCandidates);
+    console.log(`Duplicate Candidates are`, duplicateCandidates);
     const duplicateHashes = await buildHashMap(duplicateCandidates); // Build the hash map for the duplicate candidates
-    console.log("Hashes for Duplicate Files are",duplicateHashes);
     const duplicates = duplicateGroups(duplicateHashes);
-    const potentialSaving = calculateDuplicateSaving(duplicates);
-    duplicates.potentialSaving = potentialSaving;
-    console.log(`Potential saving from duplicates: ${potentialSaving} bytes`);
-    return duplicates;
+    const groupAnalysis = analyzeDuplicateGroups(duplicates);
+    const potentialSaving = calculateTotalPotentialSaving(groupAnalysis);
+    console.log(`Total Potential Saving is ${potentialSaving} bytes`);
+    return { groupAnalysis, potentialSaving };
 }
