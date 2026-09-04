@@ -1,6 +1,4 @@
-import { scanDirectory } from './scanner.js';
-import { analyzeScan } from './analyzer.js';
-import { findDuplicates } from './duplicate.js';
+import { saveScanResult, getAllScanResults } from './database.js';
 const selectFolderButton = document.getElementById('select-folder-btn');
 
 selectFolderButton.addEventListener('click', async () => {
@@ -10,7 +8,7 @@ selectFolderButton.addEventListener('click', async () => {
         const worker = new Worker("./workers/worker.js", { type: "module" });
         worker.postMessage({ type: "SCAN_FOLDER", handle: fsHandle });
 
-        worker.addEventListener('message', (event) => {
+        worker.addEventListener('message', async (event) => {
             const data = event.data;
             if (data.type === "SCAN_PROGRESS") {
                 console.log("Scan progress:", data.progress);
@@ -23,6 +21,18 @@ selectFolderButton.addEventListener('click', async () => {
             }
             else if (data.type === "SCAN_COMPLETE") {
                 console.log("Scan complete!");
+                const scanData = {
+                    id: crypto.randomUUID(),
+                    folderName: fsHandle.name,
+                    scannedAt: Date.now(),
+                    totalFiles: data.scanResult.totalFiles,
+                    totalDirectories: data.scanResult.totalDirectories,
+                    totalSize: data.scanResult.totalSize,
+                    analysisResults: data.analysis,
+                    duplicates: data.duplicates
+                }
+                await saveScanResult(scanData);
+                console.log("Scan data saved to IndexedDB:", scanData);
             }
         });
         worker.addEventListener("error", (event) => {
@@ -39,3 +49,5 @@ selectFolderButton.addEventListener('click', async () => {
     }
 });
 
+const scanHistory = await getAllScanResults();
+console.log("Scan History from IndexedDB:", scanHistory);
