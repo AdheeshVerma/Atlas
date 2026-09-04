@@ -1,4 +1,5 @@
 import { saveScanResult, getAllScanResults, getScanById, clearAllScans, deleteScanById } from './database.js';
+import { exportAsJSON } from './export.js';
 const selectFolderButton = document.getElementById('select-folder-btn');
 
 selectFolderButton.addEventListener('click', async () => {
@@ -32,6 +33,7 @@ selectFolderButton.addEventListener('click', async () => {
                     duplicates: data.duplicates
                 }
                 await saveScanResult(scanData);
+                // exportAsJSON(scanData); Only do when needs to be exported
                 console.log("Scan data saved to IndexedDB:", scanData);
                 console.log("Showing scan by id");
 
