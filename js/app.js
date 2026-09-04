@@ -1,4 +1,4 @@
-import { saveScanResult, getAllScanResults } from './database.js';
+import { saveScanResult, getAllScanResults, getScanById, clearAllScans, deleteScanById } from './database.js';
 const selectFolderButton = document.getElementById('select-folder-btn');
 
 selectFolderButton.addEventListener('click', async () => {
@@ -33,6 +33,16 @@ selectFolderButton.addEventListener('click', async () => {
                 }
                 await saveScanResult(scanData);
                 console.log("Scan data saved to IndexedDB:", scanData);
+                console.log("Showing scan by id");
+
+                const scanId = scanHistory[0].id;
+                const selectedScan = await getScanById(scanId);
+                console.log("Selected Scan:", selectedScan);
+                // For testing only 
+                // await clearAllScans();
+                // console.log("All scans cleared from IndexedDB.");
+                // await deleteScanById(scanId);
+                // console.log(`Scan with ID ${scanId} deleted from IndexedDB.`);
             }
         });
         worker.addEventListener("error", (event) => {
