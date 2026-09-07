@@ -49,6 +49,10 @@ h4 {
     overflow-wrap: break-word;
 }
 
+[hidden] {
+    display: none !important;
+}
+
 /* Base Light Mode Tokens */
 :root {
     --bg-canvas: #f6f7f9;
@@ -456,6 +460,10 @@ h4 {
     gap: var(--space-4);
 }
 
+.scan-progress-card[hidden] {
+    display: none !important;
+}
+
 .scan-progress-header {
     display: flex;
     justify-content: space-between;
@@ -474,6 +482,11 @@ h4 {
     border: 2px solid var(--border-color);
     border-top-color: var(--accent);
     border-radius: 50%;
+    display: none;
+}
+
+.scan-progress-card.is-scanning .scan-spinner {
+    display: inline-block;
     animation: spin 0.8s linear infinite;
 }
 
@@ -577,6 +590,25 @@ h4 {
     border-radius: 2px;
     width: 0%;
     transition: width 0.3s ease;
+}
+
+/* Indeterminate animation active ONLY while actively scanning */
+.scan-progress-card.is-scanning .progress-bar {
+    width: 40%;
+    position: absolute;
+    animation: indeterminate 1.5s infinite ease-in-out;
+}
+
+.scan-progress-card.is-complete .progress-bar {
+    position: static;
+    animation: none;
+    width: 100%;
+}
+
+@keyframes indeterminate {
+    0% { left: -40%; }
+    50% { left: 40%; width: 50%; }
+    100% { left: 100%; width: 40%; }
 }
 
 .scan-privacy-note {

@@ -17,6 +17,7 @@ import {
 let currentScan = null;
 let scanHistory = [];
 let activeWorker = null;
+let isScanning = false;
 
 // Setup navigation tabs
 function initNavigation() {
@@ -74,6 +75,8 @@ async function loadHistory() {
 
 // Prompt user to select a folder
 async function selectFolder() {
+    if (isScanning) return;
+
     try {
         if ('showDirectoryPicker' in window) {
             const fsHandle = await window.showDirectoryPicker();
@@ -98,18 +101,20 @@ async function selectFolder() {
 function startScan(fsHandle) {
     if (!fsHandle) return;
 
-    // Show scanning progress box
+    isScanning = true;
+
+    // Show scanning progress box with loader and Stage 1 "Scanning" active
     showScanningUI();
 
     let filesCount = 0;
     let dirsCount = 0;
-    updateScanningProgress(0, 0, 'scanning');
 
     // Start worker
     activeWorker = new Worker('./workers/worker.js', { type: 'module' });
     activeWorker.postMessage({ type: 'SCAN_FOLDER', handle: fsHandle });
 
     activeWorker.addEventListener('message', async (event) => {
+        if (!isScanning) return;
         const data = event.data;
 
         if (data.type === 'SCAN_PROGRESS') {
@@ -142,28 +147,34 @@ function startScan(fsHandle) {
                 console.error('Error saving scan to IndexedDB:', dbError);
             }
 
-            // Finish scan and update UI
+            // Finish scan, stop progress, and update UI
             setTimeout(() => {
+                isScanning = false;
                 hideScanningUI();
                 currentScan = scanData;
                 loadHistory();
                 renderAllViews();
                 showView('dashboard');
                 activeWorker = null;
-            }, 300);
+            }, 600);
         }
     });
 
     activeWorker.addEventListener('error', (event) => {
         console.error('Worker error:', event.message);
-        alert(`Scanning error: ${event.message}`);
+        isScanning = false;
         hideScanningUI();
-        activeWorker = null;
+        if (activeWorker) {
+            activeWorker.terminate();
+            activeWorker = null;
+        }
+        alert(`Scanning error: ${event.message}`);
     });
 }
 
 // Cancel an ongoing scan
 function cancelScan() {
+    isScanning = false;
     if (activeWorker) {
         activeWorker.terminate();
         activeWorker = null;
@@ -301,6 +312,9 @@ function setupEventListeners() {
 
 // Start the application
 async function initApp() {
+    isScanning = false;
+    hideScanningUI(); // Ensure scanning box is completely hidden and stopped at launch
+
     initNavigation();
     setupTheme();
     setupEventListeners();
