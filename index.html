@@ -6,12 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
         content="Atlas - Privacy-first, local-first filesystem intelligence application analyzing folders directly in your browser.">
-    <title>Atlas</title>
+    <title>Atlas &mdash; Local Filesystem Intelligence</title>
     <link rel="stylesheet" href="css/app.css">
     <script src="js/app.js" type="module" defer></script>
 </head>
 
 <body>
+    <!-- Global Header -->
     <header id="app-header" class="app-header">
         <div class="brand-container">
             <h1 class="brand-title">Atlas</h1>
@@ -20,7 +21,7 @@
 
         <div class="header-actions">
             <div id="privacy-status" class="privacy-status" role="status" aria-live="polite">
-                <span class="status-indicator"></span>
+                <span class="status-indicator" aria-hidden="true"></span>
                 <span class="status-text">Local processing only</span>
             </div>
 
@@ -30,91 +31,102 @@
         </div>
     </header>
 
+    <!-- Compact Navigation -->
+    <nav id="app-nav" class="app-nav" aria-label="Primary navigation">
+        <button type="button" class="nav-btn active" data-view="dashboard">
+            Dashboard
+        </button>
+        <button type="button" class="nav-btn" data-view="analysis">
+            Analysis
+        </button>
+        <button type="button" class="nav-btn" data-view="duplicates">
+            Duplicates
+            <span id="nav-duplicates-badge" class="nav-badge" hidden>0</span>
+        </button>
+        <button type="button" class="nav-btn" data-view="history">
+            History
+        </button>
+    </nav>
+
+    <!-- Hidden folder input as fallback -->
+    <input type="file" id="folder-input" class="folder-input" webkitdirectory directory multiple hidden
+        aria-label="Select folder to analyze">
+
+    <!-- Main Content -->
     <main id="main-content" class="main-content">
-        <!-- hero section -->
-        <section id="scan-section" class="scan-section" aria-labelledby="scan-heading">
-            <header class="section-header">
-                <h2 id="scan-heading" class="section-title">Understand your storage.</h2>
-                <p class="section-description">
-                    Atlas analyzes folders directly on your device. Your files and metadata never leave your browser.
-                </p>
-            </header>
+        <!-- Scanning Progress State -->
+        <div id="scanning-progress-box" class="scan-progress-card" hidden role="region" aria-label="Scan in progress" aria-live="polite">
+            <div class="scan-progress-header">
+                <div class="scan-progress-title-row">
+                    <span class="scan-spinner" aria-hidden="true"></span>
+                    <h3 id="scan-stage-title" class="scan-progress-title">Scanning folder...</h3>
+                </div>
+                <button type="button" id="cancel-scan-btn" class="btn-cancel" aria-label="Cancel scan">Cancel</button>
+            </div>
 
-            <div class="scan-controls">
-                <input type="file" id="folder-input" class="folder-input" webkitdirectory directory multiple hidden
-                    aria-label="Select folder to analyze">
-                <button type="button" id="select-folder-btn" class="select-folder-btn">
-                    Select Folder
-                </button>
-
-                <div id="drop-zone" class="drop-zone" tabindex="0" role="region" aria-label="Folder drop zone">
-                    <p class="drop-zone-prompt">Drop a folder here</p>
-                    <p class="drop-zone-subtext">or click Select Folder to begin</p>
+            <div class="stage-tracker" role="list">
+                <div class="stage-step active" id="stage-step-scanning" role="listitem">
+                    <span class="stage-dot"></span>
+                    <span class="stage-label">Scanning</span>
+                </div>
+                <div class="stage-step" id="stage-step-analyzing" role="listitem">
+                    <span class="stage-dot"></span>
+                    <span class="stage-label">Analyzing</span>
+                </div>
+                <div class="stage-step" id="stage-step-duplicates" role="listitem">
+                    <span class="stage-dot"></span>
+                    <span class="stage-label">Detecting duplicates</span>
+                </div>
+                <div class="stage-step" id="stage-step-complete" role="listitem">
+                    <span class="stage-dot"></span>
+                    <span class="stage-label">Complete</span>
                 </div>
             </div>
+
+            <div class="scan-stats-row">
+                <div class="scan-stat-item">
+                    <span class="scan-stat-label">Files scanned</span>
+                    <span class="scan-stat-value" id="scan-files-counter">0</span>
+                </div>
+                <div class="scan-stat-divider" aria-hidden="true">/</div>
+                <div class="scan-stat-item">
+                    <span class="scan-stat-label">Directories scanned</span>
+                    <span class="scan-stat-value" id="scan-dirs-counter">0</span>
+                </div>
+            </div>
+
+            <div class="progress-track" role="progressbar" aria-label="Scan progress">
+                <div id="scan-progress-bar" class="progress-bar"></div>
+            </div>
+
+            <p class="scan-privacy-note">
+                <span class="status-indicator"></span>
+                Processing entirely in your browser sandbox. Zero data leaves your machine.
+            </p>
+        </div>
+
+        <!-- View 1: Dashboard -->
+        <section class="app-view" data-view-content="dashboard" id="view-dashboard">
+            <!-- Populated by renderDashboard() -->
         </section>
 
-        <!-- privacy section -->
-        <section id="privacy-section" class="privacy-section" aria-labelledby="privacy-heading">
-            <h2 id="privacy-heading" class="section-title">Your files stay on your device</h2>
-            <div class="privacy-details">
-                <article class="privacy-point">
-                    <h3 class="privacy-point-title">Local Browser Execution</h3>
-                    <p class="privacy-point-text">
-                        All filesystem scanning, indexing, and analysis run locally inside your browser sandbox.
-                    </p>
-                </article>
-                <article class="privacy-point">
-                    <h3 class="privacy-point-title">Zero Server Uploads</h3>
-                    <p class="privacy-point-text">
-                        No files, filenames, directory structures, or metadata are ever copied, uploaded, or transmitted
-                        to any server.
-                    </p>
-                </article>
-                <article class="privacy-point">
-                    <h3 class="privacy-point-title">Private &amp; Offline</h3>
-                    <p class="privacy-point-text">
-                        Atlas operates independently of external services and functions entirely offline without network
-                        tracking.
-                    </p>
-                </article>
-            </div>
+        <!-- View 2: Analysis -->
+        <section class="app-view" data-view-content="analysis" id="view-analysis" hidden>
+            <!-- Populated by renderAnalysis() -->
         </section>
 
-        <!-- dashboard section -->
-        <section id="dashboard-section" class="dashboard-section" aria-labelledby="dashboard-heading">
-            <div class="dashboard-header">
-                <h2 id="dashboard-heading" class="section-title">Storage Overview</h2>
-            </div>
+        <!-- View 3: Duplicates -->
+        <section class="app-view" data-view-content="duplicates" id="view-duplicates" hidden>
+            <!-- Populated by renderDuplicates() -->
+        </section>
 
-            <div id="stats-overview" class="stats-overview">
-                <!-- stats cards -->
-                <div id="stats-container" class="stats-grid" aria-hidden="true">
-                    <article class="stat-card" id="stat-total-size">
-                        <h3 class="stat-label">Total Size</h3>
-                        <p class="stat-value">--</p>
-                    </article>
-                    <article class="stat-card" id="stat-total-files">
-                        <h3 class="stat-label">Total Files</h3>
-                        <p class="stat-value">--</p>
-                    </article>
-                    <article class="stat-card" id="stat-total-folders">
-                        <h3 class="stat-label">Total Folders</h3>
-                        <p class="stat-value">--</p>
-                    </article>
-                </div>
-
-                <!-- Empty State -->
-                <div id="empty-state" class="empty-state">
-                    <h3 class="empty-state-title">No scan yet</h3>
-                    <p class="empty-state-instruction">
-                        Select a folder to begin analyzing storage.
-                    </p>
-                </div>
-            </div>
+        <!-- View 4: History -->
+        <section class="app-view" data-view-content="history" id="view-history" hidden>
+            <!-- Populated by renderHistory() -->
         </section>
     </main>
 
+    <!-- Global Footer -->
     <footer id="app-footer" class="app-footer">
         <p class="footer-text">Atlas &mdash; Local-First Filesystem Intelligence</p>
         <p class="footer-privacy-note">All processing happens locally on your machine.</p>

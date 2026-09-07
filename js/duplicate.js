@@ -53,7 +53,11 @@ function analyzeDuplicateGroups(duplicateGroups) {
     for (const group of duplicateGroups) {
         const files = [];
         for (const file of group) {
-            files.push(file.name);
+            files.push({
+                name: file.name,
+                path: file.path,
+                size: file.size
+            });
         }
         const fileCount = files.length;
         const sizePerFile = group[0].size;
