@@ -1,5 +1,3 @@
-// Simple utility functions for formatting numbers, file sizes, and dates
-
 // Convert bytes into human-readable text (B, KB, MB, GB)
 export function formatFileSize(bytes) {
     if (!bytes || bytes <= 0) {
