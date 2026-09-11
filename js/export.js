@@ -3,7 +3,7 @@ export function exportAsJSON(scanResult, customFilename = null) {
     const blob = new Blob([jsonString], { type: "application/json" });
     const url = URL.createObjectURL(blob);
 
-    const safeFolderName = (scanResult && scanResult.folderName) 
+    const safeFolderName = (scanResult && scanResult.folderName)
         ? scanResult.folderName.toLowerCase().replace(/[^a-z0-9_-]/g, '_')
         : 'atlas_scan';
     const filename = customFilename || `${safeFolderName}_${Date.now()}.json`;
@@ -16,3 +16,4 @@ export function exportAsJSON(scanResult, customFilename = null) {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
+console.log("Into export.js");

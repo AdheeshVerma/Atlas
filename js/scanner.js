@@ -62,3 +62,4 @@ export async function scanDirectory(fsHandle, onProgress = () => { }, shouldCanc
     );
     return { scanResult, cancelled };
 }
+console.log("Into scanner.js");
