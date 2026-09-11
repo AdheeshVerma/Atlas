@@ -16,4 +16,3 @@ export function exportAsJSON(scanResult, customFilename = null) {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
-console.log("Into export.js");

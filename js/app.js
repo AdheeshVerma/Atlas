@@ -334,4 +334,3 @@ window.atlasTestScan = (testScanData) => {
 };
 
 initApp();
-console.log("Into app.js");

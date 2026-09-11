@@ -102,4 +102,3 @@ export async function clearAllScans() {
     });
 }
 
-console.log("Into db.js");

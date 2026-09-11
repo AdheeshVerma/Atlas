@@ -88,4 +88,3 @@ export async function findDuplicates(scanResult) {
     console.log(`Total Potential Saving is ${potentialSaving} bytes`);
     return { groupAnalysis, potentialSaving };
 }
-console.log("Into duplicate.js");
