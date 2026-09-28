@@ -1,6 +1,3 @@
-// Navigation and tab management
-
-// Setup click listeners for navigation tabs
 export function setupNavigation(onViewChange) {
     const buttons = document.querySelectorAll('.nav-btn');
 
@@ -15,7 +12,6 @@ export function setupNavigation(onViewChange) {
     });
 }
 
-// Switch visible view
 export function showView(viewName) {
     const views = document.querySelectorAll('.app-view');
     const buttons = document.querySelectorAll('.nav-btn');
@@ -32,7 +28,6 @@ export function showView(viewName) {
     });
 }
 
-// Update the duplicate count badge on the navigation tab
 export function updateDuplicatesBadge(count) {
     const badge = document.getElementById('nav-duplicates-badge');
     if (!badge) return;

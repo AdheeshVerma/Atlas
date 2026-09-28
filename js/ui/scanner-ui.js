@@ -1,8 +1,5 @@
-// Scanning progress and status UI
-
 import { formatNumber } from './utils.js';
 
-// Show the scanning progress box when a scan starts
 export function showScanningUI() {
     const progressBox = document.getElementById('scanning-progress-box');
     if (progressBox) {
@@ -21,11 +18,9 @@ export function showScanningUI() {
     if (filesCounter) filesCounter.textContent = '0';
     if (dirsCounter) dirsCounter.textContent = '0';
 
-    // Start with "Scanning" active
     setStageState('scanning');
 }
 
-// Hide the scanning progress box and stop all animations
 export function hideScanningUI() {
     const progressBox = document.getElementById('scanning-progress-box');
     if (progressBox) {
@@ -35,7 +30,6 @@ export function hideScanningUI() {
     resetScanningUI();
 }
 
-// Reset the scanning UI elements to idle state (no active stages, no text)
 export function resetScanningUI() {
     const progressBox = document.getElementById('scanning-progress-box');
     if (progressBox) {
@@ -52,7 +46,6 @@ export function resetScanningUI() {
     if (filesCounter) filesCounter.textContent = '0';
     if (dirsCounter) dirsCounter.textContent = '0';
 
-    // Clear all stages so none are active or completed
     const stageIds = ['scanning', 'analyzing', 'duplicates', 'complete'];
     for (const stageId of stageIds) {
         const stepEl = document.getElementById(`stage-step-${stageId}`);
@@ -62,7 +55,6 @@ export function resetScanningUI() {
     }
 }
 
-// Helper to set which stage is active and mark preceding stages as completed
 function setStageState(currentStage) {
     const stageIds = ['scanning', 'analyzing', 'duplicates', 'complete'];
     let passed = true;
@@ -81,7 +73,6 @@ function setStageState(currentStage) {
     }
 }
 
-// Update the real-time scanning progress box based on actual worker messages
 export function updateScanningProgress(filesScanned, directoriesScanned, currentStage) {
     const filesCounter = document.getElementById('scan-files-counter');
     const dirsCounter = document.getElementById('scan-dirs-counter');
@@ -102,7 +93,7 @@ export function updateScanningProgress(filesScanned, directoriesScanned, current
         if (currentStage === 'complete') stageTitle.textContent = 'Scan complete!';
     }
 
-    // When complete, stop the spinner and show full bar
+    // loader finishing
     if (currentStage === 'complete' && progressBox) {
         progressBox.classList.remove('is-scanning');
         progressBox.classList.add('is-complete');

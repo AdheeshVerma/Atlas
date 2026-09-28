@@ -1,8 +1,5 @@
-// Duplicates view rendering
-
 import { formatFileSize, formatNumber, escapeHtml } from './utils.js';
 
-// Render the Duplicates view
 export function renderDuplicates(scanData) {
     const duplicatesElement = document.getElementById('view-duplicates');
     if (!duplicatesElement) return;
@@ -45,7 +42,6 @@ export function renderDuplicates(scanData) {
         return;
     }
 
-    // Count total duplicate files across groups
     let totalDuplicateFiles = 0;
     for (const group of groupAnalysis) {
         totalDuplicateFiles += group.fileCount || (group.files ? group.files.length : 0);
@@ -86,11 +82,11 @@ export function renderDuplicates(scanData) {
             <!-- Expandable Duplicate Groups List -->
             <div class="duplicate-groups-list">
                 ${groupAnalysis.map((group, index) => {
-                    const groupSaving = group.potentialSaving || 0;
-                    const fileCount = group.fileCount || (group.files ? group.files.length : 0);
-                    const sizePerFile = group.sizePerFile || 0;
+        const groupSaving = group.potentialSaving || 0;
+        const fileCount = group.fileCount || (group.files ? group.files.length : 0);
+        const sizePerFile = group.sizePerFile || 0;
 
-                    return `
+        return `
                         <details class="duplicate-card" ${index < 5 ? 'open' : ''}>
                             <summary class="duplicate-header">
                                 <div class="duplicate-header-main">
@@ -115,12 +111,12 @@ export function renderDuplicates(scanData) {
                                     </thead>
                                     <tbody>
                                         ${(group.files || []).map((fileItem, fIndex) => {
-                                            const fileName = typeof fileItem === 'string' ? fileItem : (fileItem.name || 'file');
-                                            const filePath = typeof fileItem === 'string' ? '(path unavailable)' : (fileItem.path || fileName);
-                                            const fileSize = typeof fileItem === 'string' ? sizePerFile : (fileItem.size ?? sizePerFile);
-                                            const isFirst = fIndex === 0;
+            const fileName = typeof fileItem === 'string' ? fileItem : (fileItem.name || 'file');
+            const filePath = typeof fileItem === 'string' ? '(path unavailable)' : (fileItem.path || fileName);
+            const fileSize = typeof fileItem === 'string' ? sizePerFile : (fileItem.size ?? sizePerFile);
+            const isFirst = fIndex === 0;
 
-                                            return `
+            return `
                                                 <tr>
                                                     <td>
                                                         <span class="status-badge ${isFirst ? 'badge-original' : 'badge-duplicate'}">
@@ -132,13 +128,13 @@ export function renderDuplicates(scanData) {
                                                     <td class="text-right font-mono text-xs">${formatFileSize(fileSize)}</td>
                                                 </tr>
                                             `;
-                                        }).join('')}
+        }).join('')}
                                     </tbody>
                                 </table>
                             </div>
                         </details>
                     `;
-                }).join('')}
+    }).join('')}
             </div>
         </div>
     `;

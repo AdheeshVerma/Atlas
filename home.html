@@ -12,7 +12,6 @@
 </head>
 
 <body>
-    <!-- Global Header -->
     <header id="app-header" class="app-header">
         <div class="brand-container">
             <h1 class="brand-title">Atlas</h1>
@@ -33,7 +32,6 @@
         </div>
     </header>
 
-    <!-- Compact Navigation -->
     <nav id="app-nav" class="app-nav" aria-label="Primary navigation">
         <button type="button" class="nav-btn active" data-view="dashboard">
             Dashboard
@@ -50,13 +48,10 @@
         </button>
     </nav>
 
-    <!-- Hidden folder input as fallback -->
     <input type="file" id="folder-input" class="folder-input" webkitdirectory directory multiple hidden
         aria-label="Select folder to analyze">
 
-    <!-- Main Content -->
     <main id="main-content" class="main-content">
-        <!-- Scanning Progress State -->
         <div id="scanning-progress-box" class="scan-progress-card" hidden role="region" aria-label="Scan in progress"
             aria-live="polite">
             <div class="scan-progress-header">
@@ -108,28 +103,19 @@
             </p>
         </div>
 
-        <!-- View 1: Dashboard -->
         <section class="app-view" data-view-content="dashboard" id="view-dashboard">
-            <!-- Populated by renderDashboard() -->
         </section>
 
-        <!-- View 2: Analysis -->
         <section class="app-view" data-view-content="analysis" id="view-analysis" hidden>
-            <!-- Populated by renderAnalysis() -->
         </section>
 
-        <!-- View 3: Duplicates -->
         <section class="app-view" data-view-content="duplicates" id="view-duplicates" hidden>
-            <!-- Populated by renderDuplicates() -->
         </section>
 
-        <!-- View 4: History -->
         <section class="app-view" data-view-content="history" id="view-history" hidden>
-            <!-- Populated by renderHistory() -->
         </section>
     </main>
 
-    <!-- Global Footer -->
     <footer id="app-footer" class="app-footer">
         <p class="footer-text">Atlas &mdash; Local-First Filesystem Intelligence</p>
         <p class="footer-privacy-note">All processing happens locally on your machine.</p>

@@ -13,13 +13,11 @@ import {
     renderHistory
 } from './ui.js';
 
-// Application State
 let currentScan = null;
 let scanHistory = [];
 let activeWorker = null;
 let isScanning = false;
 
-// Setup navigation tabs
 function initNavigation() {
     setupNavigation((viewName) => {
         if (viewName === 'history') {
@@ -28,7 +26,6 @@ function initNavigation() {
     });
 }
 
-// Setup dark/light theme toggle
 function setupTheme() {
     const themeBtn = document.getElementById('theme-toggle');
     if (!themeBtn) return;
@@ -49,7 +46,6 @@ function setupTheme() {
     });
 }
 
-// Render all views with the latest scan data
 function renderAllViews() {
     renderDashboard(currentScan);
     renderAnalysis(currentScan);
@@ -62,7 +58,6 @@ function renderAllViews() {
     updateDuplicatesBadge(duplicateGroupsCount);
 }
 
-// Load scan history from IndexedDB
 async function loadHistory() {
     try {
         scanHistory = await getAllScanResults();
@@ -73,7 +68,6 @@ async function loadHistory() {
     }
 }
 
-// Prompt user to select a folder
 async function selectFolder() {
     if (isScanning) return;
 
@@ -97,19 +91,16 @@ async function selectFolder() {
     }
 }
 
-// Start scanning a directory handle using the Web Worker
 function startScan(fsHandle) {
     if (!fsHandle) return;
 
     isScanning = true;
 
-    // Show scanning progress box with loader and Stage 1 "Scanning" active
     showScanningUI();
 
     let filesCount = 0;
     let dirsCount = 0;
 
-    // Start worker
     activeWorker = new Worker('./workers/worker.js', { type: 'module' });
     activeWorker.postMessage({ type: 'SCAN_FOLDER', handle: fsHandle });
 
@@ -128,7 +119,6 @@ function startScan(fsHandle) {
         } else if (data.type === 'SCAN_COMPLETE') {
             updateScanningProgress(filesCount, dirsCount, 'complete');
 
-            // Construct scanData object
             const scanData = {
                 id: crypto.randomUUID(),
                 folderName: fsHandle.name,
@@ -140,14 +130,12 @@ function startScan(fsHandle) {
                 duplicates: data.duplicates
             };
 
-            // Save to IndexedDB
             try {
                 await saveScanResult(scanData);
             } catch (dbError) {
                 console.error('Error saving scan to IndexedDB:', dbError);
             }
 
-            // Finish scan, stop progress, and update UI
             setTimeout(() => {
                 isScanning = false;
                 hideScanningUI();
@@ -172,7 +160,6 @@ function startScan(fsHandle) {
     });
 }
 
-// Cancel an ongoing scan
 function cancelScan() {
     isScanning = false;
     if (activeWorker) {
@@ -182,9 +169,7 @@ function cancelScan() {
     hideScanningUI();
 }
 
-// Setup event listeners across the page
 function setupEventListeners() {
-    // 1. Cancel scan button
     const cancelBtn = document.getElementById('cancel-scan-btn');
     if (cancelBtn) {
         cancelBtn.addEventListener('click', () => {
@@ -192,17 +177,14 @@ function setupEventListeners() {
         });
     }
 
-    // 2. Global click listener for buttons generated inside views
     document.addEventListener('click', async (event) => {
         const target = event.target;
 
-        // Select folder buttons
         if (target.matches('#select-folder-btn') || target.matches('#rescan-folder-btn')) {
             selectFolder();
             return;
         }
 
-        // Export JSON button
         if (target.matches('#export-json-btn')) {
             if (currentScan) {
                 exportAsJSON(currentScan);
@@ -210,14 +192,12 @@ function setupEventListeners() {
             return;
         }
 
-        // Quick navigation links (e.g. data-go-to-view="analysis")
         const navLink = target.closest('[data-go-to-view]');
         if (navLink) {
             showView(navLink.dataset.goToView);
             return;
         }
 
-        // History: View past scan
         const viewBtn = target.closest('[data-action="view-scan"]');
         if (viewBtn) {
             const scanId = viewBtn.dataset.scanId;
@@ -234,7 +214,6 @@ function setupEventListeners() {
             return;
         }
 
-        // History: Delete past scan
         const deleteBtn = target.closest('[data-action="delete-scan"]');
         if (deleteBtn) {
             const scanId = deleteBtn.dataset.scanId;
@@ -250,7 +229,6 @@ function setupEventListeners() {
             return;
         }
 
-        // History: Clear all history
         if (target.matches('#clear-all-history-btn')) {
             const confirmed = window.confirm('Clear all scan history? This cannot be undone.');
             if (confirmed) {
@@ -262,7 +240,6 @@ function setupEventListeners() {
         }
     });
 
-    // 3. Drop zone drag and drop
     document.addEventListener('dragover', (event) => {
         const dropZone = event.target.closest('#drop-zone');
         if (dropZone) {
@@ -301,7 +278,6 @@ function setupEventListeners() {
         selectFolder();
     });
 
-    // 4. Click drop zone directly to open folder picker
     document.addEventListener('click', (event) => {
         const dropZone = event.target.closest('#drop-zone');
         if (dropZone && !event.target.matches('#select-folder-btn')) {
@@ -310,23 +286,19 @@ function setupEventListeners() {
     });
 }
 
-// Start the application
 async function initApp() {
     isScanning = false;
-    hideScanningUI(); // Ensure scanning box is completely hidden and stopped at launch
+    hideScanningUI();
 
     initNavigation();
     setupTheme();
     setupEventListeners();
 
-    // Initial render of all views
     renderAllViews();
 
-    // Load saved scans from IndexedDB
     await loadHistory();
 }
 
-// Expose a test helper on window for easy testing if needed
 window.atlasTestScan = (testScanData) => {
     currentScan = testScanData;
     renderAllViews();

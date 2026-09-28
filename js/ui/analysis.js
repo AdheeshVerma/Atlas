@@ -1,8 +1,5 @@
-// Analysis view rendering
-
 import { formatFileSize, formatNumber, formatDate, escapeHtml } from './utils.js';
 
-// Render the Analysis view
 export function renderAnalysis(scanData) {
     const analysisElement = document.getElementById('view-analysis');
     if (!analysisElement) return;
@@ -52,8 +49,8 @@ export function renderAnalysis(scanData) {
                         ${fileTypes.length > 0 ? `
                             <div class="type-distribution-list">
                                 ${fileTypes.map(item => {
-                                    const pct = Number(item.percentage || 0).toFixed(1);
-                                    return `
+        const pct = Number(item.percentage || 0).toFixed(1);
+        return `
                                         <div class="type-item">
                                             <div class="type-header">
                                                 <span class="type-label font-medium">${escapeHtml(item.type || 'other')}</span>
@@ -66,7 +63,7 @@ export function renderAnalysis(scanData) {
                                             </div>
                                         </div>
                                     `;
-                                }).join('')}
+    }).join('')}
                             </div>
                         ` : `
                             <p class="text-muted text-sm">No type metadata recorded.</p>
@@ -94,9 +91,9 @@ export function renderAnalysis(scanData) {
                                     </thead>
                                     <tbody>
                                         ${fileExtensions.map(ext => {
-                                            const extName = ext.extension === 'no_extension' ? '(none)' : `.${ext.extension}`;
-                                            const pct = Number(ext.percentage || 0).toFixed(1);
-                                            return `
+        const extName = ext.extension === 'no_extension' ? '(none)' : `.${ext.extension}`;
+        const pct = Number(ext.percentage || 0).toFixed(1);
+        return `
                                                 <tr>
                                                     <td><span class="ext-tag font-mono">${escapeHtml(extName)}</span></td>
                                                     <td class="text-right font-mono text-xs">${formatNumber(ext.count)}</td>
@@ -111,7 +108,7 @@ export function renderAnalysis(scanData) {
                                                     </td>
                                                 </tr>
                                             `;
-                                        }).join('')}
+    }).join('')}
                                     </tbody>
                                 </table>
                             </div>

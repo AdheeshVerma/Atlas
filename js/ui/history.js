@@ -1,8 +1,6 @@
-// History view rendering
 
 import { formatFileSize, formatNumber, formatDate, escapeHtml } from './utils.js';
 
-// Render the History view
 export function renderHistory(scanHistory, activeScanId) {
     const historyElement = document.getElementById('view-history');
     if (!historyElement) return;
@@ -24,7 +22,6 @@ export function renderHistory(scanHistory, activeScanId) {
         return;
     }
 
-    // Sort newest scans first
     const sortedScans = [...scanHistory].sort((a, b) => (b.scannedAt || 0) - (a.scannedAt || 0));
 
     historyElement.innerHTML = `
@@ -55,8 +52,8 @@ export function renderHistory(scanHistory, activeScanId) {
                     </thead>
                     <tbody>
                         ${sortedScans.map(scan => {
-                            const isCurrentlyActive = scan.id === activeScanId;
-                            return `
+        const isCurrentlyActive = scan.id === activeScanId;
+        return `
                                 <tr class="${isCurrentlyActive ? 'row-active-scan' : ''}">
                                     <td>
                                         <div class="history-folder-cell">
@@ -81,7 +78,7 @@ export function renderHistory(scanHistory, activeScanId) {
                                     </td>
                                 </tr>
                             `;
-                        }).join('')}
+    }).join('')}
                     </tbody>
                 </table>
             </div>

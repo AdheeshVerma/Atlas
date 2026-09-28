@@ -1,13 +1,10 @@
-// Dashboard view rendering
 
 import { formatFileSize, formatNumber, formatDate, escapeHtml } from './utils.js';
 
-// Render the Dashboard view
 export function renderDashboard(scanData) {
     const dashboardElement = document.getElementById('view-dashboard');
     if (!dashboardElement) return;
 
-    // If there is no scan yet, show the empty state with the folder selector and drop zone
     if (!scanData) {
         dashboardElement.innerHTML = `
             <div class="dashboard-empty-wrapper">
@@ -74,7 +71,6 @@ export function renderDashboard(scanData) {
         return;
     }
 
-    // When a scan is available, show the active scan dashboard
     const folderName = scanData.folderName || 'Selected Folder';
     const scanDate = formatDate(scanData.scannedAt);
     const totalSize = scanData.totalSize || 0;

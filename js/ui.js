@@ -1,5 +1,3 @@
-// Central coordinator for Atlas UI modules
-
 export {
     setupNavigation,
     showView,
