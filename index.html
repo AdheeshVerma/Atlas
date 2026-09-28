@@ -5,132 +5,277 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="Atlas - Privacy-first, local-first filesystem intelligence application analyzing folders directly in your browser.">
-    <title>Atlas &mdash; Local Filesystem Intelligence</title>
-    <link rel="stylesheet" href="css/app.css">
-    <script src="js/app.js" type="module" defer></script>
+        content="Atlas - Lightweight, privacy-first filesystem intelligence tool for scanning directories, analyzing storage, and detecting duplicate files locally in your browser.">
+    <title>Atlas — Local Filesystem Intelligence</title>
+    <link rel="stylesheet" href="css/home.css">
 </head>
 
 <body>
-    <!-- Global Header -->
-    <header id="app-header" class="app-header">
-        <div class="brand-container">
-            <h1 class="brand-title">Atlas</h1>
-            <p class="brand-tagline">Privacy-first filesystem intelligence</p>
+    <header class="site-header">
+        <div class="brand-block">
+            <a href="index.html" class="brand-title">Atlas</a>
+            <span class="brand-tag">local-first</span>
         </div>
 
         <div class="header-actions">
-            <div id="privacy-status" class="privacy-status" role="status" aria-live="polite">
-                <span class="status-indicator" aria-hidden="true"></span>
-                <span class="status-text">Local processing only</span>
+            <div class="privacy-badge">
+                <span class="status-dot" aria-hidden="true"></span>
+                <span>Zero Server Uploads</span>
             </div>
 
-            <button type="button" id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+            <button type="button" id="theme-toggle" class="theme-btn" aria-label="Toggle dark/light theme">
                 Theme
             </button>
+
+            <a href="home.html" class="btn btn-primary" id="header-launch-btn">
+                Launch App &rarr;
+            </a>
         </div>
     </header>
 
-    <!-- Compact Navigation -->
-    <nav id="app-nav" class="app-nav" aria-label="Primary navigation">
-        <button type="button" class="nav-btn active" data-view="dashboard">
-            Dashboard
-        </button>
-        <button type="button" class="nav-btn" data-view="analysis">
-            Analysis
-        </button>
-        <button type="button" class="nav-btn" data-view="duplicates">
-            Duplicates
-            <span id="nav-duplicates-badge" class="nav-badge" hidden>0</span>
-        </button>
-        <button type="button" class="nav-btn" data-view="history">
-            History
-        </button>
-    </nav>
-
-    <!-- Hidden folder input as fallback -->
-    <input type="file" id="folder-input" class="folder-input" webkitdirectory directory multiple hidden
-        aria-label="Select folder to analyze">
-
-    <!-- Main Content -->
-    <main id="main-content" class="main-content">
-        <!-- Scanning Progress State -->
-        <div id="scanning-progress-box" class="scan-progress-card" hidden role="region" aria-label="Scan in progress" aria-live="polite">
-            <div class="scan-progress-header">
-                <div class="scan-progress-title-row">
-                    <span class="scan-spinner" aria-hidden="true"></span>
-                    <h3 id="scan-stage-title" class="scan-progress-title"></h3>
-                </div>
-                <button type="button" id="cancel-scan-btn" class="btn-cancel" aria-label="Cancel scan">Cancel</button>
-            </div>
-
-            <div class="stage-tracker" role="list">
-                <div class="stage-step" id="stage-step-scanning" role="listitem">
-                    <span class="stage-dot"></span>
-                    <span class="stage-label">Scanning</span>
-                </div>
-                <div class="stage-step" id="stage-step-analyzing" role="listitem">
-                    <span class="stage-dot"></span>
-                    <span class="stage-label">Analyzing</span>
-                </div>
-                <div class="stage-step" id="stage-step-duplicates" role="listitem">
-                    <span class="stage-dot"></span>
-                    <span class="stage-label">Detecting duplicates</span>
-                </div>
-                <div class="stage-step" id="stage-step-complete" role="listitem">
-                    <span class="stage-dot"></span>
-                    <span class="stage-label">Complete</span>
-                </div>
-            </div>
-
-            <div class="scan-stats-row">
-                <div class="scan-stat-item">
-                    <span class="scan-stat-label">Files scanned</span>
-                    <span class="scan-stat-value" id="scan-files-counter">0</span>
-                </div>
-                <div class="scan-stat-divider" aria-hidden="true">/</div>
-                <div class="scan-stat-item">
-                    <span class="scan-stat-label">Directories scanned</span>
-                    <span class="scan-stat-value" id="scan-dirs-counter">0</span>
-                </div>
-            </div>
-
-            <div class="progress-track" role="progressbar" aria-label="Scan progress">
-                <div id="scan-progress-bar" class="progress-bar"></div>
-            </div>
-
-            <p class="scan-privacy-note">
-                <span class="status-indicator"></span>
-                Processing entirely in your browser sandbox. Zero data leaves your machine.
+    <main class="container">
+        <section class="hero-section" aria-labelledby="hero-title">
+            <h1 id="hero-title" class="hero-title">Local Filesystem Intelligence</h1>
+            <p class="hero-subtitle">Fast, private directory exploration and storage analysis in your browser.</p>
+            <p class="hero-description">
+                Atlas is a lightweight, client-side utility that scans local directories on your computer to map disk usage,
+                categorize file types, and find duplicate files. All computation executes locally inside your browser sandbox.
+                No installations, no tracking, and zero files or metadata ever leave your machine.
             </p>
-        </div>
-
-        <!-- View 1: Dashboard -->
-        <section class="app-view" data-view-content="dashboard" id="view-dashboard">
-            <!-- Populated by renderDashboard() -->
+            <div class="hero-cta-group">
+                <a href="home.html" class="btn btn-primary btn-large" id="hero-launch-btn">
+                    Open Atlas &rarr;
+                </a>
+                <a href="#features" class="btn btn-secondary btn-large">
+                    Explore Features &darr;
+                </a>
+            </div>
         </section>
 
-        <!-- View 2: Analysis -->
-        <section class="app-view" data-view-content="analysis" id="view-analysis" hidden>
-            <!-- Populated by renderAnalysis() -->
+        <section class="content-section" aria-labelledby="about-title">
+            <h2 id="about-title" class="section-title">What is Atlas?</h2>
+            <p class="section-intro">
+                Atlas was built to solve a simple problem: understanding what is taking up space inside your directories
+                without needing to install bulky desktop utilities or trust cloud-based tools with sensitive folder structures.
+            </p>
+            <p class="section-intro">
+                By leveraging the modern <strong>File System Access API</strong>, Atlas interacts directly with your device's
+                file system through explicit user permission. It reads directory structures, streams file data to compute
+                cryptographic hashes, and compiles storage metrics without transmitting a single byte over the network.
+            </p>
         </section>
 
-        <!-- View 3: Duplicates -->
-        <section class="app-view" data-view-content="duplicates" id="view-duplicates" hidden>
-            <!-- Populated by renderDuplicates() -->
+        <section id="features" class="content-section" aria-labelledby="features-title">
+            <h2 id="features-title" class="section-title">Core Features</h2>
+            <p class="section-intro">
+                Designed for speed, clarity, and safety.
+            </p>
+
+            <div class="feature-grid">
+                <article class="feature-card">
+                    <div class="feature-header">
+                        <h3 class="feature-title">Recursive Directory Traversal</h3>
+                        <span class="feature-badge">Scanner</span>
+                    </div>
+                    <p class="feature-text">
+                        Recursively crawls complex, deeply nested folder trees using asynchronous iterators. Provides live counters
+                        for files and directories scanned with instant cancellation support.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-header">
+                        <h3 class="feature-title">Storage Breakdown &amp; Analysis</h3>
+                        <span class="feature-badge">Analytics</span>
+                    </div>
+                    <p class="feature-text">
+                        Classifies storage consumption into clear categories (Documents, Code, Media, Archives, Executables) and
+                        identifies the largest space-consuming files in the selected folder.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-header">
+                        <h3 class="feature-title">Duplicate File Detection</h3>
+                        <span class="feature-badge">SHA-256</span>
+                    </div>
+                    <p class="feature-text">
+                        Locates identical files by matching file sizes and generating cryptographic SHA-256 hashes in background
+                        Web Workers. Calculates potential recoverable disk space accurately.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-header">
+                        <h3 class="feature-title">Local Scan History</h3>
+                        <span class="feature-badge">IndexedDB</span>
+                    </div>
+                    <p class="feature-text">
+                        Automatically persists previous scan sessions in browser-local storage. Reload previous reports, compare
+                        different folder snapshots, or wipe history whenever you want.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-header">
+                        <h3 class="feature-title">100% Client-Side Privacy</h3>
+                        <span class="feature-badge">Offline</span>
+                    </div>
+                    <p class="feature-text">
+                        Runs strictly in your browser. No analytics, no telemetry, no third-party scripts, and no server backend.
+                        Works completely offline without an active internet connection.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-header">
+                        <h3 class="feature-title">JSON Report Export</h3>
+                        <span class="feature-badge">Export</span>
+                    </div>
+                    <p class="feature-text">
+                        Download comprehensive scan metrics, folder path lists, file counts, and duplicate breakdowns as structured
+                        JSON files for offline documentation or automation scripts.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-header">
+                        <h3 class="feature-title">Read-Only &amp; Non-Destructive</h3>
+                        <span class="feature-badge">Safe</span>
+                    </div>
+                    <p class="feature-text">
+                        Atlas only requests read permissions. It never modifies, deletes, moves, or alters any file or directory
+                        on your computer under any circumstances.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-header">
+                        <h3 class="feature-title">Lightweight &amp; Theme Support</h3>
+                        <span class="feature-badge">Fast</span>
+                    </div>
+                    <p class="feature-text">
+                        Zero framework bloat. Fast loading, responsive layout, and built-in support for system dark mode and
+                        manual theme switching.
+                    </p>
+                </article>
+            </div>
         </section>
 
-        <!-- View 4: History -->
-        <section class="app-view" data-view-content="history" id="view-history" hidden>
-            <!-- Populated by renderHistory() -->
+        <section class="content-section" aria-labelledby="workflow-title">
+            <h2 id="workflow-title" class="section-title">How It Works</h2>
+            <ol class="steps-list">
+                <li class="step-item">
+                    <span class="step-num">1</span>
+                    <div class="step-content">
+                        <h3 class="step-content-title">Select a Folder</h3>
+                        <p class="step-content-desc">
+                            Click "Select Folder" or drop a folder onto the target zone. The browser prompts you to grant read-only access to that specific directory.
+                        </p>
+                    </div>
+                </li>
+                <li class="step-item">
+                    <span class="step-num">2</span>
+                    <div class="step-content">
+                        <h3 class="step-content-title">In-Browser Scanning &amp; Hashing</h3>
+                        <p class="step-content-desc">
+                            Atlas traverses the folder entries asynchronously. Potential duplicate candidates with matching byte sizes are dispatched to Web Workers for SHA-256 verification.
+                        </p>
+                    </div>
+                </li>
+                <li class="step-item">
+                    <span class="step-num">3</span>
+                    <div class="step-content">
+                        <h3 class="step-content-title">Inspect Insights &amp; History</h3>
+                        <p class="step-content-desc">
+                            View real-time storage breakdowns, largest files, duplicate groups, and saved history records. Export your scan data whenever needed.
+                        </p>
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+        <section class="content-section" aria-labelledby="specs-title">
+            <h2 id="specs-title" class="section-title">Technical Specifications</h2>
+            <table class="specs-table">
+                <tbody>
+                    <tr>
+                        <th scope="row">Execution Model</th>
+                        <td>100% Client-side JavaScript (browser sandbox)</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Filesystem API</th>
+                        <td>W3C File System Access API (<code class="code-inline">window.showDirectoryPicker</code>) with folder drag-and-drop fallback</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Duplicate Hashing</th>
+                        <td>Web Crypto API (<code class="code-inline">SHA-256</code>) via background Web Workers</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Local Database</th>
+                        <td>Client-side IndexedDB for scan persistence and history</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Network Activity</th>
+                        <td>0 bytes sent or received; no telemetry or remote endpoints</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Browser Support</th>
+                        <td>Full support on Chromium browsers (Chrome, Edge, Brave, Opera). Folder selection fallback on Firefox and Safari.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="callout-box" aria-labelledby="launch-callout-title">
+            <div class="callout-header">
+                <h2 id="launch-callout-title" class="callout-title">Ready to analyze a folder?</h2>
+                <p class="callout-text">
+                    Atlas is free, open source, and requires no account or setup. Open the application and select a folder to begin.
+                </p>
+            </div>
+            <div class="callout-actions">
+                <a href="home.html" class="btn btn-primary btn-large" id="cta-launch-btn">
+                    Launch Atlas &rarr;
+                </a>
+            </div>
         </section>
     </main>
 
-    <!-- Global Footer -->
-    <footer id="app-footer" class="app-footer">
-        <p class="footer-text">Atlas &mdash; Local-First Filesystem Intelligence</p>
-        <p class="footer-privacy-note">All processing happens locally on your machine.</p>
+    <footer class="site-footer">
+        <p>&copy; Atlas &mdash; Local-First Filesystem Intelligence. All processing runs locally.</p>
+        <nav class="footer-nav" aria-label="Footer navigation">
+            <a href="home.html" class="footer-link">Open App</a>
+            <a href="#hero-title" class="footer-link">Back to Top &uarr;</a>
+        </nav>
     </footer>
+
+    <script>
+        const themeBtn = document.getElementById('theme-toggle');
+        const savedTheme = localStorage.getItem('atlas_theme');
+
+        function applyTheme(theme) {
+            document.documentElement.dataset.theme = theme;
+            if (themeBtn) {
+                themeBtn.textContent = theme === 'dark' ? 'Theme: Dark' : 'Theme: Light';
+            }
+        }
+
+        if (savedTheme) {
+            applyTheme(savedTheme);
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            applyTheme('dark');
+        }
+
+        if (themeBtn) {
+            themeBtn.addEventListener('click', () => {
+                const currentTheme = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+                const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                applyTheme(nextTheme);
+                localStorage.setItem('atlas_theme', nextTheme);
+            });
+        }
+    </script>
 </body>
 
 </html>

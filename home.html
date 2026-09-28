@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Atlas - Privacy-first, local-first filesystem intelligence application analyzing folders directly in your browser.">
+    <title>Atlas &mdash; Local Filesystem Intelligence</title>
+    <link rel="stylesheet" href="css/app.css">
+    <script src="js/app.js" type="module" defer></script>
+</head>
+
+<body>
+    <!-- Global Header -->
+    <header id="app-header" class="app-header">
+        <div class="brand-container">
+            <h1 class="brand-title">Atlas</h1>
+            <p class="brand-tagline">Privacy-first filesystem intelligence</p>
+        </div>
+
+        <div class="header-actions">
+            <a href="index.html" class="theme-toggle-btn" style="text-decoration: none;">About</a>
+
+            <div id="privacy-status" class="privacy-status" role="status" aria-live="polite">
+                <span class="status-indicator" aria-hidden="true"></span>
+                <span class="status-text">Local processing only</span>
+            </div>
+
+            <button type="button" id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+                Theme
+            </button>
+        </div>
+    </header>
+
+    <!-- Compact Navigation -->
+    <nav id="app-nav" class="app-nav" aria-label="Primary navigation">
+        <button type="button" class="nav-btn active" data-view="dashboard">
+            Dashboard
+        </button>
+        <button type="button" class="nav-btn" data-view="analysis">
+            Analysis
+        </button>
+        <button type="button" class="nav-btn" data-view="duplicates">
+            Duplicates
+            <span id="nav-duplicates-badge" class="nav-badge" hidden>0</span>
+        </button>
+        <button type="button" class="nav-btn" data-view="history">
+            History
+        </button>
+    </nav>
+
+    <!-- Hidden folder input as fallback -->
+    <input type="file" id="folder-input" class="folder-input" webkitdirectory directory multiple hidden
+        aria-label="Select folder to analyze">
+
+    <!-- Main Content -->
+    <main id="main-content" class="main-content">
+        <!-- Scanning Progress State -->
+        <div id="scanning-progress-box" class="scan-progress-card" hidden role="region" aria-label="Scan in progress"
+            aria-live="polite">
+            <div class="scan-progress-header">
+                <div class="scan-progress-title-row">
+                    <span class="scan-spinner" aria-hidden="true"></span>
+                    <h3 id="scan-stage-title" class="scan-progress-title"></h3>
+                </div>
+                <button type="button" id="cancel-scan-btn" class="btn-cancel" aria-label="Cancel scan">Cancel</button>
+            </div>
+
+            <div class="stage-tracker" role="list">
+                <div class="stage-step" id="stage-step-scanning" role="listitem">
+                    <span class="stage-dot"></span>
+                    <span class="stage-label">Scanning</span>
+                </div>
+                <div class="stage-step" id="stage-step-analyzing" role="listitem">
+                    <span class="stage-dot"></span>
+                    <span class="stage-label">Analyzing</span>
+                </div>
+                <div class="stage-step" id="stage-step-duplicates" role="listitem">
+                    <span class="stage-dot"></span>
+                    <span class="stage-label">Detecting duplicates</span>
+                </div>
+                <div class="stage-step" id="stage-step-complete" role="listitem">
+                    <span class="stage-dot"></span>
+                    <span class="stage-label">Complete</span>
+                </div>
+            </div>
+
+            <div class="scan-stats-row">
+                <div class="scan-stat-item">
+                    <span class="scan-stat-label">Files scanned</span>
+                    <span class="scan-stat-value" id="scan-files-counter">0</span>
+                </div>
+                <div class="scan-stat-divider" aria-hidden="true">/</div>
+                <div class="scan-stat-item">
+                    <span class="scan-stat-label">Directories scanned</span>
+                    <span class="scan-stat-value" id="scan-dirs-counter">0</span>
+                </div>
+            </div>
+
+            <div class="progress-track" role="progressbar" aria-label="Scan progress">
+                <div id="scan-progress-bar" class="progress-bar"></div>
+            </div>
+
+            <p class="scan-privacy-note">
+                <span class="status-indicator"></span>
+                Processing entirely in your browser sandbox. Zero data leaves your machine.
+            </p>
+        </div>
+
+        <!-- View 1: Dashboard -->
+        <section class="app-view" data-view-content="dashboard" id="view-dashboard">
+            <!-- Populated by renderDashboard() -->
+        </section>
+
+        <!-- View 2: Analysis -->
+        <section class="app-view" data-view-content="analysis" id="view-analysis" hidden>
+            <!-- Populated by renderAnalysis() -->
+        </section>
+
+        <!-- View 3: Duplicates -->
+        <section class="app-view" data-view-content="duplicates" id="view-duplicates" hidden>
+            <!-- Populated by renderDuplicates() -->
+        </section>
+
+        <!-- View 4: History -->
+        <section class="app-view" data-view-content="history" id="view-history" hidden>
+            <!-- Populated by renderHistory() -->
+        </section>
+    </main>
+
+    <!-- Global Footer -->
+    <footer id="app-footer" class="app-footer">
+        <p class="footer-text">Atlas &mdash; Local-First Filesystem Intelligence</p>
+        <p class="footer-privacy-note">All processing happens locally on your machine.</p>
+    </footer>
+
+
+</body>
+
+</html>
