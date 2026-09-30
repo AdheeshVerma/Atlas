@@ -1,6 +1,6 @@
 # Atlas
 
-### Local-First Filesystem Intelligence & Directory Exploration
+### Local-First Filesystem Analyzer & Directory Exploration Tool
 
 Atlas is a lightweight, local-first filesystem intelligence and directory exploration tool built to run directly inside modern web browsers. It enables users to inspect local directories, visualize storage distribution, identify space-consuming files, and detect duplicate files without installing desktop software or uploading sensitive data to external servers.
 
