@@ -100,3 +100,8 @@ Whether auditing project repositories, decluttering media collections, or identi
 - **Read-Only Guarantee**: Atlas requests only read permissions from the browser. The application cannot alter, move, rename, or delete any local files or folders.
 - **Stage Progression Tracker**: Transparent visual indicators represent each phase of the workflow (Scanning, Analyzing, Detecting Duplicates, Complete) with dynamic counters and immediate cancellation support.
 - **Visual Ergonomics**: Clean typography, high-contrast layouts, and support for both dark and light modes ensure optimal readability during large folder audits.
+
+---
+## Screenshots
+<img width="1355" height="709" alt="image" src="https://github.com/user-attachments/assets/889a670e-7e61-472a-a527-4a2394abbccf" />
+
